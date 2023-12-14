@@ -28,9 +28,11 @@ namespace Proyecto
             string mageName = "";
             string druidName = "";
 
+            // General program flow variables
             bool correctCreation;
+            int mainMenuDecision;
 
-            // Special Variables
+            // Special characters variables
             int archerCooldown = 0, barbarianCooldown = 0, mageCooldown = 0, druidCooldown = 0, monsterKnockout = 0, barbarianAugmDefenseTurns = 0;
 
             // Stats
@@ -40,11 +42,27 @@ namespace Proyecto
             float druidHealth = 0, ogDruidHealth = 0, druidAttack = 0, druidDefense = 0;
             float monsterHealth = 0, monsterAttack = 0, monsterDefense = 0;
 
-            // Bucle para creación de nombres de los personajes
+            // ****************************** MAIN PROGRAM ******************************
+
             do
             {
                 correctCreation = GetCharactersNames(ref archerName, ref barbarianName, ref mageName, ref druidName);
+
             } while (!correctCreation);
+
+            mainMenuDecision = GetMainMenuDecision();
+
+            Console.WriteLine();
+
+            if (mainMenuDecision == 0)
+            {
+
+            }
+
+            else
+            {
+                GetDifficultyDecision();
+            }
         }
 
         public static bool GetCharactersNames(ref string archerName, ref string barbName, ref string mageName, ref string druidName)
@@ -96,6 +114,49 @@ namespace Proyecto
             {
                 return false;
             }
+        }
+
+        public static int GetMainMenuDecision()
+        {
+            string[] mainMenuOptions = { "Salir", "Iniciar nueva batalla" };
+            return GetDecision("MENÚ", mainMenuOptions);
+        }
+
+        public static int GetDifficultyDecision()
+        {
+            string[] difficultyOptions = { "Fácil", "Difícil", "Personalizada" };
+            return GetDecision("DIFICULTAD", difficultyOptions);
+        }
+
+        public static int GetDecision(string menuTitle, string[] options)
+        {
+            bool secondEx = false;
+            int decision;
+
+            do
+            {
+                if (secondEx)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Te has equivocado de opción. Vuelve a intentarlo.");
+                    Console.ResetColor();
+                }
+
+                Console.WriteLine(menuTitle);
+
+                for (int i = options.Length - 1; i >= 0; i--)
+                {
+                    Console.WriteLine($"{i}. {options[i]}");
+                }
+
+                Console.Write("Tu elección: ");
+                decision = Convert.ToInt16(Console.ReadLine());
+
+                secondEx = true;
+
+            } while (decision < 0 || decision > options.Length - 1);
+
+            return decision;
         }
     }
 }
