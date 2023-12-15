@@ -30,7 +30,7 @@ namespace Proyecto
 
             // General program flow variables
             bool correctCreation;
-            int mainMenuDecision;
+            int mainMenuDecision, difficultyDecision;
 
             // Special characters variables
             int archerCooldown = 0, barbarianCooldown = 0, mageCooldown = 0, druidCooldown = 0, monsterKnockout = 0, barbarianAugmDefenseTurns = 0;
@@ -44,11 +44,11 @@ namespace Proyecto
 
             // ****************************** MAIN PROGRAM ******************************
 
-            do
-            {
-                correctCreation = GetCharactersNames(ref archerName, ref barbarianName, ref mageName, ref druidName);
+            //do
+            //{
+            //    correctCreation = GetCharactersNames(ref archerName, ref barbarianName, ref mageName, ref druidName);
 
-            } while (!correctCreation);
+            //} while (!correctCreation);
 
             mainMenuDecision = GetMainMenuDecision();
 
@@ -56,12 +56,38 @@ namespace Proyecto
 
             if (mainMenuDecision == 0)
             {
-
+                // Salir
             }
 
             else
             {
-                GetDifficultyDecision();
+                difficultyDecision = GetDifficultyDecision();
+
+                switch (difficultyDecision)
+                {
+                    case 3:
+                        archerHealth = GetCharacterStat(MinArcherHealthValue, MaxArcherHealthValue, 3);
+                        archerAttack = GetCharacterStat(MinArcherAttackValue, MaxArcherAttackValue, 3);
+                        archerDefense = GetCharacterStat(MinArcherDefenseValue, MaxArcherDefenseValue, 3);
+                        break;
+                    case 2:
+                        archerHealth = GetCharacterStat(MinArcherHealthValue, MaxArcherHealthValue, 2);
+                        archerAttack = GetCharacterStat(MinArcherAttackValue, MaxArcherAttackValue, 2);
+                        archerDefense = GetCharacterStat(MinArcherDefenseValue, MaxArcherDefenseValue, 2);
+                        break;
+                    case 1:
+                        archerHealth = GetCharacterStat(MinArcherHealthValue, MaxArcherHealthValue, 1);
+                        archerAttack = GetCharacterStat(MinArcherAttackValue, MaxArcherAttackValue, 1);
+                        archerDefense = GetCharacterStat(MinArcherDefenseValue, MaxArcherDefenseValue, 1);
+                        break;
+                    case 0:
+                        // Personalizada
+                        // Arquera
+                        archerHealth = GetCharacterStat(MinArcherHealthValue, MaxArcherHealthValue);
+                        archerAttack = GetCharacterStat(MinArcherAttackValue, MaxArcherAttackValue);
+                        archerDefense = GetCharacterStat(MinArcherDefenseValue, MaxArcherDefenseValue);
+                        break;
+                }
             }
         }
 
@@ -124,7 +150,7 @@ namespace Proyecto
 
         public static int GetDifficultyDecision()
         {
-            string[] difficultyOptions = { "Fácil", "Difícil", "Personalizada" };
+            string[] difficultyOptions = { "Personalizada", "Random", "Difícil", "Fácil" };
             return GetDecision("DIFICULTAD", difficultyOptions);
         }
 
@@ -157,6 +183,47 @@ namespace Proyecto
             } while (decision < 0 || decision > options.Length - 1);
 
             return decision;
+        }
+
+        public static float GetCharacterStat(int minValue, int maxValue)
+        {
+            float stat;
+            bool secondEx = false;
+            do
+            {
+                if (secondEx)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Te has equivocado de opción. Vuelve a intentarlo.");
+                    Console.ResetColor();
+                }
+
+                Console.Write($"Escoge el valor de la estadística entre los rangos permitidos [{minValue} ... {maxValue}]: ");
+                stat = Convert.ToSingle(Console.ReadLine());
+
+                secondEx = true;
+
+            } while (stat < minValue || stat > maxValue);
+
+            return stat;
+        }
+
+        public static float GetCharacterStat(int minvalue, int maxValue, int automaticDifficulty)
+        {
+            if (automaticDifficulty == 3)
+            {
+                return maxValue;
+            }
+            else if (automaticDifficulty == 2)
+            {
+                return minvalue;
+            }
+            else
+            {
+                Random random = new Random();
+
+                return Convert.ToSingle(random.NextDouble() * (maxValue - minvalue) + minvalue);
+            }
         }
     }
 }
