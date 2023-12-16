@@ -12,8 +12,11 @@ namespace Proyecto
         // CÓDIGO MAIN
         public static void Main()
         {
-            // CONSTRAINTS
+            // ****************************** CONSTRAINTS ******************************
             // Messages
+
+            // Difficulty numbers
+            const int EasyMode = 3, HardMode = 2, RandomMode = 1;
 
             // Valid range for every character stats
             const int MinArcherHealthValue = 1500, MaxArcherHealthValue = 2000, MinArcherAttackValue = 180, MaxArcherAttackValue = 300, MinArcherDefenseValue = 25, MaxArcherDefenseValue = 35;
@@ -21,15 +24,18 @@ namespace Proyecto
             const int MinMageHealthValue = 1100, MaxMageHealthValue = 1500, MinMageAttackValue = 300, MaxMageAttackValue = 400, MinMageDefenseValue = 20, MaxMageDefenseValue = 35;
             const int MinDruidHealthValue = 2000, MaxDruidHealthValue = 2500, MinDruidAttackValue = 70, MaxDruidAttackValue = 120, MinDruidDefenseValue = 25, MaxDruidDefenseValue = 40;
             const int MinMonsterHealthValue = 7000, MaxMonsterHealthValue = 10000, MinMonsterAttackValue = 300, MaxMonsterAttackValue = 400, MinMonsterDefenseValue = 20, MaxMonsterDefenseValue = 30;
+            const int IndexArcher = 0, IndexBarbarian = 1, IndexMage = 2, IndexDruid = 3, IndexMonster = 4;
 
-            // VARIABLES
+            // ****************************** VARIABLES ******************************
+            Random random = new Random();
+
             string archerName = "";
             string barbarianName = "";
             string mageName = "";
             string druidName = "";
 
             // General program flow variables
-            bool correctCreation;
+            bool correctNameCreation;
             int mainMenuDecision, difficultyDecision;
 
             // Special characters variables
@@ -42,52 +48,73 @@ namespace Proyecto
             float druidHealth = 0, ogDruidHealth = 0, druidAttack = 0, druidDefense = 0;
             float monsterHealth = 0, monsterAttack = 0, monsterDefense = 0;
 
+            int[,] allStatsRange = new int[,]
+            {
+                { MinArcherHealthValue, MaxArcherHealthValue, MinArcherAttackValue, MaxArcherAttackValue, MinArcherDefenseValue, MaxArcherDefenseValue },
+                { MinBarbarianHealthValue, MaxBarbarianHealthValue, MinBarbarianAttackValue, MaxBarbarianAttackValue, MinBarbarianDefenseValue, MaxBarbarianDefenseValue },
+                { MinMageHealthValue, MaxMageHealthValue, MinMageAttackValue, MaxMageAttackValue, MinMageDefenseValue, MaxMageDefenseValue },
+                { MinDruidHealthValue, MaxDruidHealthValue, MinDruidAttackValue, MaxDruidAttackValue, MinDruidDefenseValue, MaxDruidDefenseValue },
+                { MinMonsterHealthValue, MaxMonsterHealthValue, MinMonsterAttackValue, MaxMonsterAttackValue, MinMonsterDefenseValue, MaxMonsterDefenseValue }
+            };
+
             // ****************************** MAIN PROGRAM ******************************
 
             //do
             //{
-            //    correctCreation = GetCharactersNames(ref archerName, ref barbarianName, ref mageName, ref druidName);
+            //    correctNameCreation = GetCharactersNames(ref archerName, ref barbarianName, ref mageName, ref druidName);
 
-            //} while (!correctCreation);
-
-            mainMenuDecision = GetMainMenuDecision();
+            //} while (!correctNameCreation);
 
             Console.WriteLine();
 
-            if (mainMenuDecision == 0)
+            // Salir
+            if (!GetMainMenuDecision())
             {
-                // Salir
+                // Despedida del juego
             }
 
+            // Jugar
             else
             {
                 difficultyDecision = GetDifficultyDecision();
 
-                switch (difficultyDecision)
+                // Creación personajes según dificultad
+                if (difficultyDecision == 0)
                 {
-                    case 3:
-                        archerHealth = GetCharacterStat(MinArcherHealthValue, MaxArcherHealthValue, 3);
-                        archerAttack = GetCharacterStat(MinArcherAttackValue, MaxArcherAttackValue, 3);
-                        archerDefense = GetCharacterStat(MinArcherDefenseValue, MaxArcherDefenseValue, 3);
-                        break;
-                    case 2:
-                        archerHealth = GetCharacterStat(MinArcherHealthValue, MaxArcherHealthValue, 2);
-                        archerAttack = GetCharacterStat(MinArcherAttackValue, MaxArcherAttackValue, 2);
-                        archerDefense = GetCharacterStat(MinArcherDefenseValue, MaxArcherDefenseValue, 2);
-                        break;
-                    case 1:
-                        archerHealth = GetCharacterStat(MinArcherHealthValue, MaxArcherHealthValue, 1);
-                        archerAttack = GetCharacterStat(MinArcherAttackValue, MaxArcherAttackValue, 1);
-                        archerDefense = GetCharacterStat(MinArcherDefenseValue, MaxArcherDefenseValue, 1);
-                        break;
-                    case 0:
-                        // Personalizada
-                        // Arquera
-                        archerHealth = GetCharacterStat(MinArcherHealthValue, MaxArcherHealthValue);
-                        archerAttack = GetCharacterStat(MinArcherAttackValue, MaxArcherAttackValue);
-                        archerDefense = GetCharacterStat(MinArcherDefenseValue, MaxArcherDefenseValue);
-                        break;
+
                 }
+                else
+                {
+                    // Creación arquera
+                    CreateCharacterAutomatic(allStatsRange, IndexArcher, difficultyDecision, random, ref archerHealth, ref archerAttack, ref archerDefense);
+
+                    // Creación bárbaro
+                    CreateCharacterAutomatic(allStatsRange, IndexBarbarian, difficultyDecision, random, ref barbarianHealth, ref barbarianAttack, ref barbarianDefense);
+
+                    // Creación maga
+                    CreateCharacterAutomatic(allStatsRange, IndexMage, difficultyDecision, random, ref mageHealth, ref mageAttack, ref mageDefense);
+
+                    // Creación druida
+                    CreateCharacterAutomatic(allStatsRange, IndexDruid, difficultyDecision, random, ref druidHealth, ref druidAttack, ref druidDefense);
+
+                    // Cambiar dificultad para adaptarla a las stats del monstruo
+                    if (difficultyDecision == EasyMode)
+                    {
+                        // Dificultad fácil, atributos bajos para monstruo
+                        difficultyDecision = HardMode;
+                    }
+                    else if (difficultyDecision == HardMode)
+                    {
+                        // Dificultad díficil, atributos altos para monstruo
+                        difficultyDecision = EasyMode;
+                    }
+
+                    // Creación monstruo
+                    CreateCharacterAutomatic(allStatsRange, IndexMonster, difficultyDecision, random, ref monsterHealth, ref monsterAttack, ref monsterDefense);
+                }
+
+                // Sistema de turnos
+                // Turno de arquera
             }
         }
 
@@ -97,15 +124,13 @@ namespace Proyecto
             {
                 return $"{word[0].ToString().ToUpper()}{word.Substring(1).ToLower()}";
             }
-
             string userInput;
             string[] separatedNames;
 
             Console.Write("Introduce 4 nombres separados por comas.\nSe asignarán a los personajes en este orden: Arquera, Bárbaro, Maga, Druida.\nEscribe aqui: ");
+
             userInput = Console.ReadLine() ?? "";
-
             userInput = userInput.Replace(" ", "");
-
             separatedNames = userInput.Split(',');
 
             for (int i = 0; i < separatedNames.Length; i++)
@@ -142,10 +167,10 @@ namespace Proyecto
             }
         }
 
-        public static int GetMainMenuDecision()
+        public static bool GetMainMenuDecision()
         {
             string[] mainMenuOptions = { "Salir", "Iniciar nueva batalla" };
-            return GetDecision("MENÚ", mainMenuOptions);
+            return GetDecision("MENÚ", mainMenuOptions) == 0 ? false : true;
         }
 
         public static int GetDifficultyDecision()
@@ -185,7 +210,8 @@ namespace Proyecto
             return decision;
         }
 
-        public static float GetCharacterStat(int minValue, int maxValue)
+        // Dificultad personalizada
+        public static float CreateCharacterStat(int minValue, int maxValue)
         {
             float stat;
             bool secondEx = false;
@@ -208,7 +234,8 @@ namespace Proyecto
             return stat;
         }
 
-        public static float GetCharacterStat(int minvalue, int maxValue, int automaticDifficulty)
+        // Dificultad automática
+        public static float CreateCharacterStat(int minvalue, int maxValue, int automaticDifficulty, Random random)
         {
             if (automaticDifficulty == 3)
             {
@@ -220,10 +247,15 @@ namespace Proyecto
             }
             else
             {
-                Random random = new Random();
-
                 return Convert.ToSingle(random.NextDouble() * (maxValue - minvalue) + minvalue);
             }
+        }
+
+        public static void CreateCharacterAutomatic(int[,] allStatsRange, int characterIndex, int difficulty, Random random, ref float health, ref float attack, ref float defense)
+        {
+            health = CreateCharacterStat(allStatsRange[characterIndex, 0], allStatsRange[characterIndex, 1], difficulty, random);
+            attack = CreateCharacterStat(allStatsRange[characterIndex, 2], allStatsRange[characterIndex, 3], difficulty, random);
+            defense = CreateCharacterStat(allStatsRange[characterIndex, 4], allStatsRange[characterIndex, 5], difficulty, random);
         }
     }
 }
