@@ -16,7 +16,7 @@ namespace Proyecto
             // Messages
 
             // Difficulty numbers
-            const int EasyMode = 3, HardMode = 2, RandomMode = 1;
+            const int EasyMode = 3, HardMode = 2, PersonalizedMode = 0;
 
             // Valid range for every character stats
             const int MinArcherHealthValue = 1500, MaxArcherHealthValue = 2000, MinArcherAttackValue = 180, MaxArcherAttackValue = 300, MinArcherDefenseValue = 25, MaxArcherDefenseValue = 35;
@@ -59,14 +59,6 @@ namespace Proyecto
 
             // ****************************** MAIN PROGRAM ******************************
 
-            //do
-            //{
-            //    correctNameCreation = GetCharactersNames(ref archerName, ref barbarianName, ref mageName, ref druidName);
-
-            //} while (!correctNameCreation);
-
-            Console.WriteLine();
-
             // Salir
             if (!GetMainMenuDecision())
             {
@@ -78,23 +70,27 @@ namespace Proyecto
             {
                 difficultyDecision = GetDifficultyDecision();
 
-                // Creación personajes según dificultad
-                if (difficultyDecision == 0)
+                // ************************** Creación personajes según dificultad **************************
+                if (difficultyDecision == PersonalizedMode)
                 {
+                    CreateCharacterAutomatic(allStatsRange, IndexArcher, ref archerHealth, ref archerAttack, ref archerDefense);
 
+                    CreateCharacterAutomatic(allStatsRange, IndexBarbarian, ref barbarianHealth, ref barbarianAttack, ref barbarianDefense);
+
+                    CreateCharacterAutomatic(allStatsRange, IndexMage, ref mageHealth, ref mageAttack, ref mageDefense);
+
+                    CreateCharacterAutomatic(allStatsRange, IndexDruid, ref druidHealth, ref druidAttack, ref druidDefense);
+
+                    CreateCharacterAutomatic(allStatsRange, IndexMonster, ref monsterHealth, ref monsterAttack, ref monsterDefense);
                 }
                 else
                 {
-                    // Creación arquera
                     CreateCharacterAutomatic(allStatsRange, IndexArcher, difficultyDecision, random, ref archerHealth, ref archerAttack, ref archerDefense);
 
-                    // Creación bárbaro
                     CreateCharacterAutomatic(allStatsRange, IndexBarbarian, difficultyDecision, random, ref barbarianHealth, ref barbarianAttack, ref barbarianDefense);
 
-                    // Creación maga
                     CreateCharacterAutomatic(allStatsRange, IndexMage, difficultyDecision, random, ref mageHealth, ref mageAttack, ref mageDefense);
 
-                    // Creación druida
                     CreateCharacterAutomatic(allStatsRange, IndexDruid, difficultyDecision, random, ref druidHealth, ref druidAttack, ref druidDefense);
 
                     // Cambiar dificultad para adaptarla a las stats del monstruo
@@ -113,8 +109,15 @@ namespace Proyecto
                     CreateCharacterAutomatic(allStatsRange, IndexMonster, difficultyDecision, random, ref monsterHealth, ref monsterAttack, ref monsterDefense);
                 }
 
-                // Sistema de turnos
-                // Turno de arquera
+                // ************************** Nombres de los personajes **************************
+                //do
+                //{
+                //    correctNameCreation = GetCharactersNames(ref archerName, ref barbarianName, ref mageName, ref druidName);
+
+                //} while (!correctNameCreation);
+
+                // ************************** Sistema de turnos **************************
+
             }
         }
 
@@ -175,7 +178,7 @@ namespace Proyecto
 
         public static int GetDifficultyDecision()
         {
-            string[] difficultyOptions = { "Personalizada", "Random", "Difícil", "Fácil" };
+            string[] difficultyOptions = { "Random", "Personalizada", "Difícil", "Fácil" };
             return GetDecision("DIFICULTAD", difficultyOptions);
         }
 
@@ -256,6 +259,19 @@ namespace Proyecto
             health = CreateCharacterStat(allStatsRange[characterIndex, 0], allStatsRange[characterIndex, 1], difficulty, random);
             attack = CreateCharacterStat(allStatsRange[characterIndex, 2], allStatsRange[characterIndex, 3], difficulty, random);
             defense = CreateCharacterStat(allStatsRange[characterIndex, 4], allStatsRange[characterIndex, 5], difficulty, random);
+        }
+
+        public static void CreateCharacterAutomatic(int[,] allStatsRange, int characterIndex, ref float health, ref float attack, ref float defense)
+        {
+            health = CreateCharacterStat(allStatsRange[characterIndex, 0], allStatsRange[characterIndex, 1]);
+            attack = CreateCharacterStat(allStatsRange[characterIndex, 2], allStatsRange[characterIndex, 3]);
+            defense = CreateCharacterStat(allStatsRange[characterIndex, 4], allStatsRange[characterIndex, 5]);
+        }
+
+        public static int GetTurnDecision()
+        {
+            string[] difficultyOptions = { "Usar habilidad especial", "Protegerse", "Atacar" };
+            return GetDecision("DIFICULTAD", difficultyOptions);
         }
     }
 }
