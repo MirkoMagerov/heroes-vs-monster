@@ -16,7 +16,7 @@ namespace Proyecto
             // Messages
 
             // Difficulty numbers
-            const int EasyMode = 3, HardMode = 2, PersonalizedMode = 0;
+            const int EasyMode = 3, HardMode = 2, PersonalizedMode = 1;
 
             // Valid range for every character stats
             const int MinArcherHealthValue = 1500, MaxArcherHealthValue = 2000, MinArcherAttackValue = 180, MaxArcherAttackValue = 300, MinArcherDefenseValue = 25, MaxArcherDefenseValue = 35;
@@ -47,6 +47,8 @@ namespace Proyecto
             float mageHealth = 0, ogMageHealth = 0, mageAttack = 0, mageDefense = 0;
             float druidHealth = 0, ogDruidHealth = 0, druidAttack = 0, druidDefense = 0;
             float monsterHealth = 0, monsterAttack = 0, monsterDefense = 0;
+
+            int[] turnOrder = GetTurnOrder(random, IndexArcher, IndexBarbarian, IndexMage, IndexDruid);
 
             int[,] allStatsRange = new int[,]
             {
@@ -117,7 +119,10 @@ namespace Proyecto
                 //} while (!correctNameCreation);
 
                 // ************************** Sistema de turnos **************************
+                for (int i = 0; i < turnOrder.Length; i++)
+                {
 
+                }
             }
         }
 
@@ -250,7 +255,7 @@ namespace Proyecto
             }
             else
             {
-                return Convert.ToSingle(random.NextDouble() * (maxValue - minvalue) + minvalue);
+                return Convert.ToSingle(random.Next(minvalue, maxValue + 1));
             }
         }
 
@@ -266,6 +271,21 @@ namespace Proyecto
             health = CreateCharacterStat(allStatsRange[characterIndex, 0], allStatsRange[characterIndex, 1]);
             attack = CreateCharacterStat(allStatsRange[characterIndex, 2], allStatsRange[characterIndex, 3]);
             defense = CreateCharacterStat(allStatsRange[characterIndex, 4], allStatsRange[characterIndex, 5]);
+        }
+
+        public static int[] GetTurnOrder(Random random, int archerIndex, int barbarianIndex, int mageIndex, int druidIndex)
+        {
+            int[] randomOrder = { archerIndex, barbarianIndex, mageIndex, druidIndex };
+
+            for (int i = randomOrder.Length - 1; i > 0; i--)
+            {
+                int j = random.Next(0, i + 1);
+                int temp = randomOrder[j];
+                randomOrder[i] = temp;
+                randomOrder[j] = randomOrder[i];
+            }
+
+            return randomOrder;
         }
 
         public static int GetTurnDecision()
