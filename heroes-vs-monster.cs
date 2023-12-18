@@ -16,7 +16,7 @@ namespace Proyecto
             // Messages
 
             // Difficulty numbers
-            const int EasyMode = 3, HardMode = 2, PersonalizedMode = 0;
+            const int EasyMode = 3, HardMode = 2, PersonalizedMode = 1;
 
             // Valid range for every character stats
             const int MinArcherHealthValue = 1500, MaxArcherHealthValue = 2000, MinArcherAttackValue = 180, MaxArcherAttackValue = 300, MinArcherDefenseValue = 25, MaxArcherDefenseValue = 35;
@@ -173,7 +173,7 @@ namespace Proyecto
         public static bool GetMainMenuDecision()
         {
             string[] mainMenuOptions = { "Salir", "Iniciar nueva batalla" };
-            return GetDecision("MENÚ", mainMenuOptions) == 0 ? false : true;
+            return GetDecision("MENÚ", mainMenuOptions) != 0;
         }
 
         public static int GetDifficultyDecision()
@@ -250,7 +250,7 @@ namespace Proyecto
             }
             else
             {
-                return Convert.ToSingle(random.NextDouble() * (maxValue - minvalue) + minvalue);
+                return Convert.ToSingle(random.Next(minvalue, maxValue + 1));
             }
         }
 
