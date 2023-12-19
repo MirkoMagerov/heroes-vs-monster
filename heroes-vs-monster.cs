@@ -72,6 +72,7 @@ namespace Proyecto
             // Jugar
             else if (tries > 0)
             {
+                tries = 3;
                 Console.WriteLine();
                 difficultyDecision = GetDifficultyDecision(ref tries);
 
@@ -330,9 +331,10 @@ namespace Proyecto
             for (int i = randomOrder.Length - 1; i > 0; i--)
             {
                 int j = random.Next(0, i + 1);
-                int temp = randomOrder[j];
-                randomOrder[i] = temp;
-                randomOrder[j] = randomOrder[i];
+
+                int temp = randomOrder[i];
+                randomOrder[i] = randomOrder[j];
+                randomOrder[j] = temp;
             }
 
             return randomOrder;
