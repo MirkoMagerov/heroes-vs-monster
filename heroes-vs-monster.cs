@@ -256,7 +256,7 @@ namespace Proyecto
             }
             else
             {
-                return Convert.ToSingle(random.NextDouble() * (maxValue - minvalue) + minvalue);
+                return Convert.ToSingle(random.Next(minvalue, maxValue + 1));
             }
         }
 
@@ -274,12 +274,13 @@ namespace Proyecto
             defense = CreateCharacterStat(allStatsRange[characterIndex, 4], allStatsRange[characterIndex, 5], difficulty, random);
         }
 
+        public static string CapitalizeFirstLetter(string word)
+        {
+            return $"{word[0].ToString().ToUpper()}{word.Substring(1).ToLower()}";
+        }
+
         public static bool GetCharactersNames(ref string archerName, ref string barbName, ref string mageName, ref string druidName)
         {
-            static string CapitalizeFirstLetter(string word)
-            {
-                return $"{word[0].ToString().ToUpper()}{word.Substring(1).ToLower()}";
-            }
             string userInput;
             string[] separatedNames;
 
@@ -330,9 +331,7 @@ namespace Proyecto
             for (int i = randomOrder.Length - 1; i > 0; i--)
             {
                 int j = random.Next(0, i + 1);
-                int temp = randomOrder[j];
-                randomOrder[i] = temp;
-                randomOrder[j] = randomOrder[i];
+                (randomOrder[i], randomOrder[j]) = (randomOrder[j], randomOrder[i]);
             }
 
             return randomOrder;
